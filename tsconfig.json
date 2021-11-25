@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": false,
     "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -15,7 +16,7 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    //"strict": true,
+    "strict": false,
     "alwaysStrict": true,
     "exactOptionalPropertyTypes": true,
     "strictNullChecks": true,
@@ -28,9 +29,7 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
-    "target": "ES2020",
-    "strict": false,
-    "forceConsistentCasingInFileNames": true
+    "target": "ES2020"
   },
   "include": [
     "next-env.d.ts",
@@ -39,5 +38,11 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    },
+    "transpileOnly": true
+  }
 }

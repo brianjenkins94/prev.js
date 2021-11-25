@@ -2,7 +2,6 @@
   "name": "prev",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
     "cypress": "cypress open",
     "start": "nodemon --watch \"**/*.ts\" --exec node --experimental-specifier-resolution=node --loader ts-node/esm server.ts",
