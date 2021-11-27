@@ -22,7 +22,6 @@ const app = next({
 	"dev": dev
 });
 
-
 app.prepare().then(async function() {
 	// @ts-expect-error
 	app.server.router.fsRoutes.push(...await (async function(routesDirectory) {
@@ -40,8 +39,11 @@ app.prepare().then(async function() {
 
 		const routes = [];
 
-
 		for (const file of files) {
+			if (file.endsWith("middleware.ts")) {
+				throw new Error("Not yet implemented.");
+			}
+
 			const routeHandlers = {};
 
 			const route = await import(file);
@@ -79,7 +81,7 @@ app.prepare().then(async function() {
 				},
 				"fn": async function(request, response, _, parsedUrl) {
 					// @ts-expect-error
-					await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, repsonse: NextApiResponse) {
+					await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, response: NextApiResponse) {
 						routeHandlers[request.method.toLowerCase()](request, response);
 					});
 
