@@ -7,7 +7,21 @@ import { apiResolver } from "next/dist/server/api-utils";
 //const __filename = url.fileURLToPath(import.meta.url);
 //const __dirname = path.dirname(__filename);
 
-const dev = process.env["NODE_ENV"] !== "production";
+process.on("uncaughtException", async function(error) {
+	console.error("We have a little problem with our entry sequence, so we may experience some slight turbulence, and then explode.");
+
+	console.error(error.stack);
+
+	//await postMessageToChannel("```" + error.stack + "```", "#general");
+
+	process.exit(1);
+});
+
+for (const signal of ["SIGINT", "SIGUSR1", "SIGUSR2"]) {
+	process.on(signal, function() {
+		process.exit(0);
+	});
+}
 
 const app = next({
 	"conf": {
@@ -17,50 +31,38 @@ const app = next({
 		},
 		"rewrites": async function() {
 			return [];
+		},
+		"webpack": function(config, options) {
+			config.output.environment = {
+				"arrowFunction": true,
+				"bigIntLiteral": true,
+				"const": true,
+				"destructuring": true,
+				"dynamicImport": true,
+				"forOf": true,
+				"module": true
+			};
+
+			return config;
 		}
 	},
-	"dev": dev
+	"dev": true
 });
 
-app.prepare().then(async function() {
-	// @ts-expect-error
-	app.server.router.fsRoutes.push(...await (async function(routesDirectory) {
-		const files = [];
+async function routeify(routesDirectory) {
+	const routes = [];
 
-		(function recurse(directory) {
-			for (const file of fs.readdirSync(directory)) {
-				if (fs.statSync(path.join(directory, file)).isDirectory()) {
-					recurse(path.join(directory, file));
-				} else if (path.extname(file).toLowerCase() === ".ts") {
-					files.push(path.join(directory, file));
-				}
-			}
-		})(routesDirectory);
+	await (async function breadthFirstSearch(queue) {
+		const nextQueue = {};
 
-		const routes = [];
+		const routeLayer = {};
 
-		for (const file of files) {
-			if (file.endsWith("middleware.ts")) {
-				throw new Error("Not yet implemented.");
-			}
+		for (const [directory, files] of Object.entries(queue)) {
+			for (let file of files) {
+				file = path.join(directory, file);
 
-			const routeHandlers = {};
-
-			const route = await import(file);
-
-			const parsedPath = path.parse(file.substring(routesDirectory.length));
-			let pathName = parsedPath.dir;
-
-			for (const routeHandler of Object.keys(route)) {
-				let method = (/^(?:connect|del(?:ete)?|get|head|options|patch|post|put|trace)/u.exec(routeHandler) || [])[0];
-
-				if (method === undefined) {
-					continue;
-				}
-
-				if (method === "del") {
-					method = "delete";
-				}
+				const parsedPath = path.parse(file.substring(routesDirectory.length));
+				let pathName = parsedPath.dir;
 
 				if (parsedPath.name !== "index") {
 					pathName = path.join(pathName, parsedPath.name);
@@ -68,30 +70,70 @@ app.prepare().then(async function() {
 
 				pathName = pathName.replace(/\\/gu, "/");
 
-				console.log("Binding " + method.toUpperCase() + " " + pathName);
+				if (fs.statSync(file).isDirectory()) {
+					nextQueue[file] = fs.readdirSync(file);
+				} else {
+					routeLayer[pathName] = {};
 
-				routeHandlers[method] = route[routeHandler];
-			}
+					const routeHandler = await import(file);
 
-			routes.push({
-				"type": "route",
-				"name": pathName,
-				"match": function(pathname) {
-					return pathname === pathName;
-				},
-				"fn": async function(request, response, _, parsedUrl) {
-					// @ts-expect-error
-					await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, response: NextApiResponse) {
-						routeHandlers[request.method.toLowerCase()](request, response);
-					});
+					for (const name of Object.keys(routeHandler)) {
+						let method = (/^(?:connect|del(?:ete)?|get|head|options|patch|post|put|trace)/u.exec(name) || [])[0];
 
-					return { "finished": true };
+						if (method === undefined) {
+							continue;
+						}
+
+						if (method === "del") {
+							method = "delete";
+						}
+
+						routeLayer[pathName][method] = routeHandler[method];
+					}
 				}
-			});
+			}
 		}
 
-		return routes;
-	})(path.join(__dirname, "routes")));
+		routes.push(...(function processRoute(routeHandlers) {
+			const routes = [];
+
+			for (const [pathName, routeHandler] of Object.entries(routeHandlers)) {
+				routes.push({
+					"type": "route",
+					"name": pathName,
+					"match": function(pathname) {
+						// TODO: Improve
+						return pathname === pathName;
+					},
+					"fn": async function(request, response, _, parsedUrl) {
+						// @ts-expect-error
+						await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, response: NextApiResponse) {
+							if (routeHandler[request.method.toLowerCase()] !== undefined) {
+								routeHandler[request.method.toLowerCase()](request, response);
+							} else {
+								response.status(405);
+							}
+						});
+
+						return { "finished": true };
+					}
+				});
+			}
+
+			return routes;
+		})(routeLayer));
+
+		if (Object.keys(nextQueue).length > 0) {
+			await breadthFirstSearch(nextQueue);
+		}
+	})({ [routesDirectory]: fs.readdirSync(routesDirectory) });
+
+	return routes;
+}
+
+app.prepare().then(async function() {
+	// @ts-expect-error
+	app.server.router.fsRoutes.push(...await routeify(path.join(__dirname, "routes")));
 
 	createServer(app.getRequestHandler()).listen(3000, function() {
 		console.log("> Ready on http://localhost:3000");

@@ -2,6 +2,7 @@
   "name": "prev",
   "version": "1.0.0",
   "description": "",
+  "bin": "prev",
   "scripts": {
     "cypress": "cypress open",
     "start": "node --experimental-specifier-resolution=node --loader ts-node/esm server.ts",
