@@ -18,11 +18,11 @@
     "skipLibCheck": true,
     "strict": false,
     "alwaysStrict": true,
-    "exactOptionalPropertyTypes": true,
-    "strictNullChecks": true,
+    //"exactOptionalPropertyTypes": true,
+    //"strictNullChecks": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
+    //"strictPropertyInitialization": true,
     //"noImplicitAny": true,
     //"noImplicitThis": true,
     //"useUnknownInCatchVariables": true,
@@ -42,7 +42,6 @@
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"
-    },
-    "transpileOnly": true
+    }
   }
 }

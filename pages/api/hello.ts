@@ -5,9 +5,6 @@ interface Data {
 	name: string;
 }
 
-export default function handler(
-	req: NextApiRequest,
-	res: NextApiResponse<Data>
-) {
-	res.status(200).json({ "name": "John Doe" });
+export default function handler(request: NextApiRequest, response: NextApiResponse<Data>) {
+	response.status(200).json({ "name": "John Doe" });
 }

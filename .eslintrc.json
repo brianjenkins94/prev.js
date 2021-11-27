@@ -102,6 +102,7 @@
 		"arrow-body-style": "off",
 		"capitalized-comments": "off",
 		"consistent-return": "off",
+		"class-methods-use-this": "off",
 		"func-names": "off",
 		"id-length": "off",
 		"line-comment-position": "off",

@@ -14,11 +14,11 @@
 				"ts-node/esm"
 			],
 			"args": [
-				"${workspaceFolder}/scripts/build.ts",
+				"${workspaceFolder}/server.ts",
 			],
 			"skipFiles": [
-				"${workspaceRoot}/node_modules/**/*.js",
-				"<node_internals>/**/*.js"
+				//"${workspaceRoot}/node_modules/**/*.js",
+				"<node_internals>/**"
 			],
 			"console": "integratedTerminal"
         }

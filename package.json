@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "cypress": "cypress open",
-    "start": "nodemon --watch \"**/*.ts\" --exec node --experimental-specifier-resolution=node --loader ts-node/esm server.ts",
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm server.ts",
     "test": "cypress run"
   },
   "repository": {
@@ -19,7 +19,6 @@
   "homepage": "https://github.com/brianjenkins94/prev#readme",
   "dependencies": {
     "next": "latest",
-    "nodemon": "latest",
     "react": "latest",
     "react-dom": "latest",
     "ts-node": "latest",
