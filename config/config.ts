@@ -2,127 +2,51 @@
 
 import assert from "assert";
 
-function minimist(args) {
-	const argv = {};
-
-	function setKey(object, key, value) {
-		if (key === "__proto__" || object === Object.prototype || object === Number.prototype || object === String.prototype || object === Array.prototype) {
-			throw new Error("Invalid key name.");
-		}
-
-		if (object[key] === undefined || typeof object[key] === "boolean") {
-			object[key] = value;
-		} else if (Array.isArray(object[key])) {
-			object[key].push(value);
-		} else {
-			object[key] = [object[key], value];
-		}
-	}
-
-	function setArg(key, val) {
-		setKey(argv, key, /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/u.test(val) ? Number(val) : val);
-	}
-
-	if (args.includes("--")) {
-		args = args.slice(0, args.indexOf("--"));
-	}
+function parseArgs(args) {
+	const result = {};
 
 	for (let x = 0; x < args.length; x++) {
-		const arg = args[x];
+		const wholeArg = args[x];
 
-		if (/^--.+=/u.test(arg)) {
-			const [key, value] = /^--([^=]+)=([\s\S]*)$/u.exec(arg).slice(1);
-
-			setArg(key, value);
-
-			continue;
+		if (wholeArg === "--") {
+			break;
 		}
 
-		if (/^--.+/u.test(arg)) {
-			const key = /^--(.+)/u.exec(arg)[1];
-			const next = args[x + 1];
+		if (wholeArg.length > 1 && wholeArg[0] === "-") {
+			for (const arg of wholeArg[1] === "-" || wholeArg.length === 2 ? [wholeArg] : wholeArg.slice(1).split("").map((a) => `-${a}`)) {
+				const [key, value] = arg[1] === "-" ? arg.split(/[=](.*)/u, 2) : [arg, undefined];
 
-			if (next !== undefined && !next.startsWith("-")) {
-				setArg(key, next);
-
-				x += 1;
-			} else if (/^(true|false)$/u.test(next)) {
-				setArg(key, next === "true");
-
-				x += 1;
-			} else {
-				setArg(key, true);
+				result[key] = value ?? args[x + 1];
 			}
-
-			continue;
-		}
-
-		if (/^-[^-]+/u.test(arg)) {
-			const letters = arg.slice(1, -1).split("");
-
-			let broken = false;
-
-			for (let x = 0; x < letters.length; x++) {
-				const next = arg.slice(x + 2);
-
-				if (next === "-") {
-					setArg(letters[x], next);
-
-					continue;
-				}
-
-				if (/[A-Za-z]/u.test(letters[x]) && next.includes("=")) {
-					setArg(letters[x], next.replace(/^=/u, ""));
-
-					broken = true;
-
-					break;
-				}
-
-				if (/[A-Za-z]/u.test(letters[x]) && /-?\d+(\.\d*)?(e-?\d+)?$/u.test(next)) {
-					setArg(letters[x], next);
-
-					broken = true;
-
-					break;
-				}
-
-				if (letters[x + 1] && /\W/u.exec(letters[x + 1])) {
-					setArg(letters[x], arg.slice(x + 2));
-
-					broken = true;
-
-					break;
-				} else {
-					setArg(letters[x], true);
-				}
-			}
-
-			const key = arg.slice(-1)[0];
-
-			if (!broken && key !== "-") {
-				if (args[x + 1] && !/^(-|--)[^-]/u.test(args[x + 1])) {
-					setArg(key, args[x + 1]);
-
-					x += 1;
-				} else if (args[x + 1] && /^(true|false)$/u.test(args[x + 1])) {
-					setArg(key, args[x + 1] === "true");
-
-					x += 1;
-				} else {
-					setArg(key, true);
-				}
-			}
-
-			continue;
 		}
 	}
 
-	return argv;
+	return result;
 }
 
-const parseArgs = require("yargs-parser");
-const cloneDeep = require("lodash.clonedeep");
+function cloneDeep(object) {
+	const clone = Array.isArray(object) ? [] : {};
+
+	for (const [key, value] of Object.entries(object)) {
+		if (Array.isArray(value)) {
+			clone[key] = [];
+
+			for (const element of value) {
+				if (typeof element === "object" && element !== null) {
+					clone[key].push(cloneDeep(element));
+				} else {
+					clone[key].push(element);
+				}
+			}
+		} else if (typeof value === "object" && value !== null) {
+			clone[key] = cloneDeep(value);
+		} else {
+			clone[key] = value;
+		}
+	}
+
+	return clone;
+}
 
 function validate(instance, schema, strictValidation) {
 	const errors = {
