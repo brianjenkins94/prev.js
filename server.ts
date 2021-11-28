@@ -1,14 +1,19 @@
+import { apiResolver } from "next/dist/server/api-utils";
 import { createServer } from "http";
 import * as fs from "fs";
 import * as path from "path";
+import Eta from "eta";
 import next from "next";
-import { apiResolver } from "next/dist/server/api-utils";
 
 //const __filename = url.fileURLToPath(import.meta.url);
 //const __dirname = path.dirname(__filename);
 
-process.on("uncaughtException", async function(error) {
-	console.error("We have a little problem with our entry sequence, so we may experience some slight turbulence, and then explode.");
+if (fs.existsSync(path.join(__dirname, "views"))) {
+	Eta.config.views = path.join(__dirname, "views");
+}
+
+process.on("uncaughtException", function(error) {
+	console.error("We have a little problem with our entry sequence, so we may experience some slight turbulence and then explode.");
 
 	console.error(error.stack);
 
@@ -73,12 +78,20 @@ async function routeify(routesDirectory) {
 				if (fs.statSync(file).isDirectory()) {
 					nextQueue[file] = fs.readdirSync(file);
 				} else {
+					if (file.endsWith("_middleware.ts")) {
+						throw new Error("Not yet implemented");
+					}
+
 					routeLayer[pathName] = {};
 
 					const routeHandler = await import(file);
 
-					for (const name of Object.keys(routeHandler)) {
-						let method = (/^(?:connect|del(?:ete)?|get|head|options|patch|post|put|trace)/u.exec(name) || [])[0];
+					for (const exportName of Object.keys(routeHandler)) {
+						if (/middleware$/iu.test(exportName)) {
+							throw new Error("Not yet implemented");
+						}
+
+						let method = (/^(?:connect|del(?:ete)?|get|head|options|patch|post|put|trace)/u.exec(exportName) || [])[0];
 
 						if (method === undefined) {
 							continue;
@@ -94,7 +107,7 @@ async function routeify(routesDirectory) {
 			}
 		}
 
-		routes.push(...(function processRoute(routeHandlers) {
+		routes.push(...(function processRouteLayer(routeHandlers) {
 			const routes = [];
 
 			for (const [pathName, routeHandler] of Object.entries(routeHandlers)) {
@@ -102,10 +115,20 @@ async function routeify(routesDirectory) {
 					"type": "route",
 					"name": pathName,
 					"match": function(pathname) {
-						// TODO: Improve
-						return pathname === pathName;
+						// TODO: Improve?
+						return new RegExp(pathName.replace(/\[.*?\]+/gu, "(.*)"), "u").test(pathname);
 					},
 					"fn": async function(request, response, _, parsedUrl) {
+						request.render = function(fileName, data) {
+							Eta.renderFile(fileName, data, function(error, string) {
+								if (error !== undefined) {
+									throw error;
+								}
+
+								response.send(string);
+							});
+						};
+
 						// @ts-expect-error
 						await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, response: NextApiResponse) {
 							if (routeHandler[request.method.toLowerCase()] !== undefined) {
