@@ -68,8 +68,8 @@ class Juvy {
 		"_juvyProperties": {}
 	};
 	private readonly options = {};
-	private readonly argv = {};
 	private readonly env = {};
+	private readonly argv = {};
 
 	public constructor(schema, options = { "strict": true }) {
 		this.options["strict"] = options["strict"];
@@ -92,6 +92,10 @@ class Juvy {
 		path = path.split(".").join("._juvyProperties.") + ".default";
 
 		return cloneDeep(getKeyOfObjectByPath(this.schema._juvyProperties, path));
+	}
+
+	private _get(path) {
+		return cloneDeep(getKeyOfObjectByPath(this.schema, path));
 	}
 
 	public get(path) {
@@ -182,10 +186,6 @@ class Juvy {
 		// ???
 
 		return this;
-	}
-
-	private _get(path) {
-		return cloneDeep(getKeyOfObjectByPath(this.schema, path));
 	}
 }
 
