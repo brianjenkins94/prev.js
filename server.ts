@@ -2,11 +2,14 @@ import { apiResolver } from "next/dist/server/api-utils";
 import { createServer } from "http";
 import * as fs from "fs";
 import * as path from "path";
-import Eta from "eta";
+import * as url from "url";
+import * as Eta from "eta";
 import next from "next";
 
-//const __filename = url.fileURLToPath(import.meta.url);
-//const __dirname = path.dirname(__filename);
+import { config } from "./config";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 if (fs.existsSync(path.join(__dirname, "views"))) {
 	Eta.config.views = path.join(__dirname, "views");
@@ -36,19 +39,6 @@ const app = next({
 		},
 		"rewrites": async function() {
 			return [];
-		},
-		"webpack": function(config, options) {
-			config.output.environment = {
-				"arrowFunction": true,
-				"bigIntLiteral": true,
-				"const": true,
-				"destructuring": true,
-				"dynamicImport": true,
-				"forOf": true,
-				"module": true
-			};
-
-			return config;
 		}
 	},
 	"dev": true
@@ -158,7 +148,7 @@ app.prepare().then(async function() {
 	// @ts-expect-error
 	app.server.router.fsRoutes.push(...await routeify(path.join(__dirname, "routes")));
 
-	createServer(app.getRequestHandler()).listen(3000, function() {
-		console.log("> Ready on http://localhost:3000");
+	createServer(app.getRequestHandler()).listen(config.get("port"), function() {
+		console.log("> Ready on http://localhost:" + config.get("port"));
 	});
 });
