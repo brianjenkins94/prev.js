@@ -67,8 +67,13 @@ class Juvy {
 	private readonly schema = {
 		"_juvyProperties": {}
 	};
+	private readonly options = {};
+	private readonly argv = {};
+	private readonly env = {};
 
 	public constructor(schema, options = { "strict": true }) {
+		this.options["strict"] = options["strict"];
+
 		// ???
 		for (const [key, value] of Object.entries(schema)) {
 			if (key === "_juvyProperties") {
@@ -94,15 +99,13 @@ class Juvy {
 			return this._get(path);
 		}
 
-		path = path[0].toUpperCase() + path.substring(1);
-
 		if (this._get("env") === "production") {
-			if (this.has("prod" + path)) {
-				return this.get("prod" + path);
+			if (this.has("prod." + path)) {
+				return this.get("prod." + path);
 			}
 		}
 
-		return this._get("dev" + path);
+		return this._get("dev." + path);
 	}
 
 	public getProperties() {
@@ -118,20 +121,24 @@ class Juvy {
 	}
 
 	public set(path, value) {
-		// ???
-		const format = (function getFormat(schema, path) {
-			const o = traverseSchema(schema, path);
-			if (o === null) {
-				return null;
+		// <IDK>
+		const ar = path.split(".");
+
+		let o = this.schema;
+
+		while (ar.length > 0) {
+			const k = ar.shift();
+
+			if (o?._juvyProperties?.[k]) {
+				o = o._juvyProperties[k];
+			} else {
+				o = null;
+				break;
 			}
-			if (typeof o.format === "string") {
-				return o.format;
-			}
-			if (o.default !== null) {
-				return typeof o.default;
-			}
-			return null;
-		})(this.schema, path);
+		}
+		// </IDK>
+
+		const format = o["format"];
 
 		if (typeof value === "string") {
 			switch (format) {
@@ -171,7 +178,7 @@ class Juvy {
 		return this;
 	}
 
-	public validate(options) {
+	public validate(options = this.options) {
 		// ???
 
 		return this;
