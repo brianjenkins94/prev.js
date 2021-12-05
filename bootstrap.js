@@ -7,10 +7,10 @@ import * as url from "url";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let directory = process.cwd()
+let directory = __dirname;
 
 const options = {
-	"cwd": "/Users/bjenks/.npm/_npx/59469f58d9fd3e53/node_modules",
+	"cwd": directory,
 	"encoding": "utf8",
 	"stdio": "inherit"
 };
@@ -39,6 +39,6 @@ if (process.platform === "win32") {
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
 	"--loader=ts-node/esm",
-	"/Users/bjenks/.npm/_npx/59469f58d9fd3e53/node_modules/prev/prev.ts",
+	path.join(directory, "prev.ts"),
 	...process.argv
 ], options);
