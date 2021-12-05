@@ -2,7 +2,7 @@
   "name": "prev",
   "version": "1.0.0",
   "description": "",
-  "bin": "bootstrap.mjs",
+  "bin": "bootstrap.js",
   "type": "module",
   "scripts": {
     "cypress": "cypress open",
