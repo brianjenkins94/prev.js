@@ -85,6 +85,7 @@
 		"@typescript-eslint/init-declarations": "off",
 		"@typescript-eslint/lines-between-class-members": "off",
 		"@typescript-eslint/member-ordering": "off",
+		"@typescript-eslint/no-dynamic-delete": "off",
 		"@typescript-eslint/no-floating-promises": "off",
 		"@typescript-eslint/no-implicit-any-catch": "off",
 		"@typescript-eslint/no-magic-numbers": "off",

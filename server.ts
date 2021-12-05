@@ -144,11 +144,11 @@ async function routeify(routesDirectory) {
 	return routes;
 }
 
-app.prepare().then(async function() {
-	// @ts-expect-error
-	app.server.router.fsRoutes.push(...await routeify(path.join(__dirname, "routes")));
+await app.prepare();
 
-	createServer(app.getRequestHandler()).listen(config.get("port"), function() {
-		console.log("> Ready on http://localhost:" + config.get("port"));
-	});
+// @ts-expect-error
+app.server.router.fsRoutes.push(...await routeify(path.join(__dirname, "routes")));
+
+createServer(app.getRequestHandler()).listen(config.get("port"), function() {
+	console.log("> Ready on http://localhost:" + config.get("port"));
 });

@@ -67,4 +67,4 @@ await (async function recurse(directory, parent) {
 
 export const config = juvy(schema);
 
-config.validate();
+config.validate({ "strict": true });
