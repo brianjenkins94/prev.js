@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 let directory = process.cwd()
 
 const options = {
-	"cwd": "/Users/bjenks/.npm/_npx/59469f58d9fd3e53",
+	"cwd": "/Users/bjenks/.npm/_npx/59469f58d9fd3e53/node_modules",
 	"encoding": "utf8",
 	"stdio": "inherit"
 };
@@ -39,6 +39,6 @@ if (process.platform === "win32") {
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
 	"--loader=ts-node/esm",
-	path.join(directory, "prev.ts"),
+	path.join(process.cwd(), "prev.ts"),
 	...process.argv
 ], options);
