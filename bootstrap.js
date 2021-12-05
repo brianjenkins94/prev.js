@@ -38,7 +38,7 @@ if (process.platform === "win32") {
 
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
-	"--loader=ts-node/esm",
+	"--loader=../node_modules/ts-node/esm",
 	path.join(directory, "prev.ts"),
 	...process.argv
 ], options);
