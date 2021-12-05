@@ -107,8 +107,8 @@ function findRepositories(baseDirectory) {
 
 function findRepositoryTextFiles(cwd = baseDirectory) {
 	const options = {
-		"encoding": "utf8",
-		"stdio": "inherit"
+		"cwd": cwd,
+		"encoding": "utf8"
 	};
 
 	if (process.platform === "win32") {
@@ -124,7 +124,7 @@ function findRepositoryTextFiles(cwd = baseDirectory) {
 		} else if (fs.existsSync(wsl)) {
 			const { root, dir, base } = path.parse(cwd);
 
-			cwd = path.join("/", "mnt", root.split(":")[0].toLowerCase(), dir.substring(root.length), base).replace(/\\/gu, "/");
+			options["cwd"] = path.join("/", "mnt", root.split(":")[0].toLowerCase(), dir.substring(root.length), base).replace(/\\/gu, "/");
 
 			options["shell"] = wsl;
 		} else {
@@ -151,7 +151,7 @@ function retab(file) {
 			return " ".repeat(match.length * 4);
 		}).replace(/[ \t]+$/gmu, "");
 
-		const indentationWidth = (data.match(/^ {2,}/mu) || [""])[0].length;
+		const indentationWidth = (/^ {2,}/mu.exec(data) || [""])[0].length;
 
 		data = data.split("\n");
 
@@ -160,7 +160,7 @@ function retab(file) {
 		let errors = "";
 
 		for (let x = 0; x < data.length; x++) {
-			const [indentation, firstToken] = (data[x].match(/^\s{2,}?\S+/u) || [""])[0].split(/(\S+)/u, 2);
+			const [indentation, firstToken] = (/^\s{2,}?\S+/u.exec(data[x]) || [""])[0].split(/(\S+)/u, 2);
 			const lastToken = data[x].split(/(\S+)$/u, 2).pop();
 
 			if (data[x] !== "" || indentationLevel === indentation.length / indentationWidth) {
@@ -195,7 +195,7 @@ function retab(file) {
 
 		data = data.join("\n");
 
-		if (indentationWidth >= 2 && file.toLowerCase().indexOf(".md") === -1) {
+		if (indentationWidth >= 2 && !file.toLowerCase().endsWith(".md")) {
 			data = data.replace(new RegExp("^( {" + indentationWidth + "})+", "gmu"), function(match) {
 				return "\t".repeat(match.length / indentationWidth);
 			});
@@ -208,33 +208,29 @@ function retab(file) {
 }
 
 if (argv["recursive"] === true && argv["update"] === true) {
-	(async function() {
-		const repositories = findRepositories(baseDirectory);
+	const repositories = findRepositories(baseDirectory);
 
+	for (const repository of repositories) {
+		await update(repository);
+	}
+
+	if (argv["retab"] === true) {
 		for (const repository of repositories) {
-			await update(repository);
-		}
+			const files = findRepositoryTextFiles(repository).filter(function(file) {
+				return !argv["exclude"].includes(path.basename(file));
+			});
 
-		if (argv["retab"] === true) {
-			for (const repository of repositories) {
-				const files = findRepositoryTextFiles(repository).filter(function(file) {
-					return argv["exclude"].indexOf(path.basename(file)) === -1;
-				});
-
-				for (const file of files) {
-					retab(path.join(repository, file));
-				}
+			for (const file of files) {
+				retab(path.join(repository, file));
 			}
 		}
-	})();
+	}
 } else if (argv["update"] === true) {
-	(async function() {
-		if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
-			if (argv["yes"] === true || (await confirm("Are you sure you're in the right place?", false))) {
-				update();
-			}
+	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
+		if (await confirm("Are you sure you're in the right place?", false)) {
+			update();
 		}
-	})();
+	}
 } else {
 	const dependencies = ["typescript", "ts-node", "@types/node"];
 	const devDependencies = ["eslint", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser"];
