@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "cypress": "cypress open",
-    "start": "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts",
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm server.ts",
     "test": "cypress run"
   },
   "repository": {
