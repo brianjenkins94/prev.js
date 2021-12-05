@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 let directory = process.cwd()
 
 const options = {
-	"cwd": directory,
+	"cwd": "/Users/bjenks/.npm/_npx/59469f58d9fd3e53",
 	"encoding": "utf8",
 	"stdio": "inherit"
 };
