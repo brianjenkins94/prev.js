@@ -1,7 +1,6 @@
-export default [
-	{
-		"name": "password",
+export default {
+	"password": {
 		"format": "String",
 		"default": "*******"
 	}
-];
+};

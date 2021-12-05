@@ -20,6 +20,7 @@
 		// Turn on TypeScript-specific rules
 		"plugin:@typescript-eslint/all"
 	],
+	"reportUnusedDisableDirectives": true,
 	"rules": {
 		// Error
 		"@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": false }],
