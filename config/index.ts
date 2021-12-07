@@ -32,9 +32,11 @@ await (async function recurse(directory, parent) {
 			continue;
 		} else if (path.extname(file).toLowerCase() === ".ts") {
 			if (file !== "index.ts") {
-				parent[path.basename(file, path.extname(file))] = {};
+				const key = path.basename(file, path.extname(file));
 
-				parent = parent[path.basename(file, path.extname(file))];
+				parent[key] = {};
+
+				parent = parent[key];
 			}
 
 			(function recurse(options, parent) {

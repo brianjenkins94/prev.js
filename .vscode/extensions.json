@@ -4,9 +4,10 @@
 
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-		"streetsidesoftware.code-spell-checker",
+		"dbaeumer.vscode-eslint",
 		"mrmlnc.vscode-remark",
-		"dbaeumer.vscode-eslint"
+		"shadowtime2000.eta-vscode",
+		"streetsidesoftware.code-spell-checker"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

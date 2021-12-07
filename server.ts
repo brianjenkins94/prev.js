@@ -16,8 +16,6 @@ if (fs.existsSync(path.join(__dirname, "views"))) {
 }
 
 process.on("uncaughtException", function(error) {
-	console.error("We have a little problem with our entry sequence, so we may experience some slight turbulence and then explode.");
-
 	console.error(error.stack);
 
 	//await postMessageToChannel("```" + error.stack + "```", "#general");
@@ -44,7 +42,10 @@ const app = next({
 	"dev": true
 });
 
-async function routeify(routesDirectory) {
+await app.prepare();
+
+// @ts-expect-error
+app.server.router.fsRoutes.push(...await (async function routeify(routesDirectory) {
 	const routes = [];
 
 	await (async function breadthFirstSearch(queue) {
@@ -142,13 +143,11 @@ async function routeify(routesDirectory) {
 	})({ [routesDirectory]: fs.readdirSync(routesDirectory) });
 
 	return routes;
-}
-
-await app.prepare();
-
-// @ts-expect-error
-app.server.router.fsRoutes.push(...await routeify(path.join(__dirname, "routes")));
+})(path.join(__dirname, "routes")));
 
 createServer(app.getRequestHandler()).listen(config.get("port"), function() {
 	console.log("> Ready on http://localhost:" + config.get("port"));
 });
+
+// HACK: https://github.com/vercel/next.js/issues/9607
+fs.writeFileSync(path.join(__dirname, ".next", "package.json"), JSON.stringify({ "type": "CommonJS" }, undefined, 2));

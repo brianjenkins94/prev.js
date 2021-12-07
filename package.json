@@ -1,12 +1,14 @@
 {
   "name": "prev",
   "version": "1.0.0",
-  "description": "",
-  "bin": "bootstrap.js",
+  "description": "The React framework for people who don't want to learn React.",
+  "bin": "scripts/npx.js",
   "type": "module",
   "scripts": {
     "cypress": "cypress open",
-    "start": "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts",
+    "build": "(next build && kill -INT 0 & npm run hack)",
+    "hack": "while sleep 1; do echo \"{\n  \\\"type\\\": \\\"CommonJS\\\"\n}\" > .next/package.json; done",
+    "start": "(node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts && kill -INT 0 && npm run hack)",
     "test": "cypress run"
   },
   "repository": {
