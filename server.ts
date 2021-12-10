@@ -110,7 +110,7 @@ app.server.router.fsRoutes.push(...await (async function routeify(routesDirector
 						return new RegExp(pathName.replace(/\[.*?\]+/gu, "(.*)"), "u").test(pathname);
 					},
 					"fn": async function(request, response, _, parsedUrl) {
-						request.render = function(fileName, data) {
+						response.render = function(fileName, data) {
 							Eta.renderFile(fileName, data, function(error, string) {
 								if (error !== undefined) {
 									throw error;

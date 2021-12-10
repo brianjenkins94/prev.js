@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "cypress": "cypress open",
-    "build": "(next build && kill -INT 0 & npm run hack)",
-    "hack": "while sleep 1; do echo \"{\n  \\\"type\\\": \\\"CommonJS\\\"\n}\" > .next/package.json; done",
-    "start": "(node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts && kill -INT 0 && npm run hack)",
+    "build": "({ next build ; kill -INT 0 ; } & while sleep 1; do echo \"{\n  \\\"type\\\": \\\"CommonJS\\\"\n}\" > .next/package.json; done)",
+    "start": "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts",
     "test": "cypress run"
   },
   "repository": {

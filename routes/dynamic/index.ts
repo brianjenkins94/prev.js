@@ -5,5 +5,6 @@ export function get(request: NextApiRequest, response: NextApiResponse): Promise
 	// ../node_modules/next/dist/server/api-utils.js
 	// response.(write|end|status|send|json|redirect)
 
-	response.send("Hijacked!");
+	// @ts-expect-error
+	response.render("Hijacked!");
 }

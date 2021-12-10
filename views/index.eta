@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<!-- Metadata -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="" />
+
+	<!-- Title -->
+	<title><%= title %></title>
+
+	<!-- Thumbnails -->
+	<link rel="icon" href="/images/favicon.png" />
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:300&display=swap" rel="stylesheet">
+
+	<!-- Libraries -->
+	<%- styles %>
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/overrides.css" />
+
+	<!-- Inline Stylesheet -->
+	<style>
+		.row {
+			background-color: #ffffff;
+		}
+		.row > * {
+			padding: 4rem;
+		}
+
+		[id^=viewer] {
+			width: initial;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<%- include("../partials/_header") %>
+
+	<%- markup %>
+
+	<%- include("../partials/_footer") %>
+
+	<!-- Libraries -->
+	<%- scripts %>
+
+	<!-- Inline Script -->
+	<script>
+
+		<%- beforeDocumentReady.toString().split("\n").slice(1, -1).join("\n") %>
+
+		document.addEventListener("DOMContentLoaded", async function(event) {
+			<%- documentReady.toString().split("\n").slice(1, -1).join("\n") %>
+		});
+
+	</script>
+
+</body>
+</html>
