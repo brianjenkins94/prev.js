@@ -6,5 +6,16 @@ export function get(request: NextApiRequest, response: NextApiResponse): Promise
 	// response.(write|end|status|send|json|redirect)
 
 	// @ts-expect-error
-	response.render("Hijacked!");
+	response.render("index", {
+		"title": "",
+		"styles": "",
+		"markup": "",
+		"scripts": "",
+		"beforeDocumentReady": function() {
+
+		},
+		"documentReady": function() {
+
+		}
+	});
 }
