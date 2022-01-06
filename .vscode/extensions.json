@@ -6,7 +6,6 @@
 	"recommendations": [
 		"dbaeumer.vscode-eslint",
 		"mrmlnc.vscode-remark",
-		"shadowtime2000.eta-vscode",
 		"streetsidesoftware.code-spell-checker"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
