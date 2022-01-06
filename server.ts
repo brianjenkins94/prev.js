@@ -3,22 +3,18 @@ import { createServer } from "http";
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as Eta from "eta";
 import next from "next";
 
 import { config } from "./config";
+import { render } from "./renderer";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (fs.existsSync(path.join(__dirname, "views"))) {
-	Eta.config.views = path.join(__dirname, "views");
-}
-
 process.on("uncaughtException", function(error) {
 	console.error(error.stack);
 
-	//await postMessageToChannel("```" + error.stack + "```", "#general");
+	//await postMessageToSlackChannel("```" + error.stack + "```", "#general");
 
 	process.exit(1);
 });
@@ -111,16 +107,10 @@ app.server.router.fsRoutes.push(...await (async function routeify(routesDirector
 					},
 					"fn": async function(request, response, _, parsedUrl) {
 						response.render = function(fileName, data) {
-							Eta.renderFile(fileName, data, function(error, string) {
-								if (error !== undefined) {
-									throw error;
-								}
-
-								response.send(string);
-							});
+							response.send(render(fs.readFileSync(fileName, { "encoding": "utf8" }), data));
 						};
 
-						// @ts-expect-error
+						/// @ts-expect-error
 						await apiResolver(request, response, parsedUrl.query, function(request: NextApiRequest, response: NextApiResponse) {
 							if (routeHandler[request.method.toLowerCase()] !== undefined) {
 								routeHandler[request.method.toLowerCase()](request, response);

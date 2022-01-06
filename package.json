@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/brianjenkins94/prev#readme",
   "dependencies": {
-    "eta": "latest",
     "juvy": "latest",
     "next": "canary",
     "react": "latest",
