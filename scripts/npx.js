@@ -41,7 +41,7 @@ console.log(options);
 
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
-	"--loader=ts-node/esm",
+	"--loader=" + path.join(directory, "..", "ts-node", "esm"),
 	path.join(directory, "prev.ts"),
 	...process.argv.slice(2)
 ], options);
