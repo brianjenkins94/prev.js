@@ -2,6 +2,10 @@ import { createInterface } from "readline";
 import { execSync } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
+import * as url from "url";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const argv = (function parseArgs(args) {
 	// Defaults
