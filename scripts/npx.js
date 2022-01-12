@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 let directory = __dirname;
 
 const options = {
-	"cwd": directory,
+	"cwd": process.cwd(),
 	"encoding": "utf8",
 	"stdio": "inherit"
 };
@@ -43,5 +43,5 @@ spawnSync("node", [
 	"--experimental-specifier-resolution=node",
 	"--loader=ts-node/esm",
 	path.join(directory, "prev.ts"),
-	...process.argv
+	...process.argv.slice(2)
 ], options);
