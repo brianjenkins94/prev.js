@@ -2,12 +2,8 @@
 
 import { spawnSync } from "child_process";
 import * as path from "path";
-import * as url from "url";
 
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-let directory = __dirname;
+let directory = process.cwd();
 
 const options = {
 	"cwd": directory,
