@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/brianjenkins94/prev#readme",
   "dependencies": {
+    "@types/node": "latest",
     "juvy": "latest",
     "next": "canary",
     "react": "latest",
@@ -29,7 +30,6 @@
     "typescript": "latest"
   },
   "devDependencies": {
-    "@types/node": "latest",
     "@types/react": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
