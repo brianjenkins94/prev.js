@@ -111,7 +111,7 @@ function findRepositoryTextFiles(cwd = baseDirectory) {
 	const options = {
 		"cwd": cwd,
 		"encoding": "utf8"
-	};
+	} as any;
 
 	if (process.platform === "win32") {
 		const bash = path.join(process.env["ProgramW6432"], "Git", "usr", "bin", "bash.exe");
@@ -147,7 +147,7 @@ function findRepositoryTextFiles(cwd = baseDirectory) {
 }
 
 function retab(file) {
-	fs.readFile(file, "utf8", function(error, data) {
+	fs.readFile(file, "utf8", function(error, data: any) {
 		// Convert leading, trim trailing
 		data = data.replace(/^\t+/gmu, function(match) {
 			return " ".repeat(match.length * 4);
