@@ -2,8 +2,12 @@
 
 import { spawnSync } from "child_process";
 import * as path from "path";
+import * as url from "url";
 
-let directory = process.cwd();
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+let directory = __dirname;
 
 const options = {
 	"cwd": directory,
@@ -31,6 +35,9 @@ if (process.platform === "win32") {
 		throw new Error("No suitable shell found. Aborting.");
 	}
 }
+
+console.log(process.argv);
+console.log(options);
 
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
