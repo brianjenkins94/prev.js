@@ -36,17 +36,17 @@ if (process.platform === "win32") {
 	}
 }
 
-console.log([
+console.log("\n" + [
 	"> node",
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	path.join(directory, "prev.ts"),
+	url.pathToFileURL(path.join(directory, "prev.ts")),
 	...process.argv.slice(2)
 ].join(" ") + "\n");
 
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	path.join(directory, "prev.ts"),
+	url.pathToFileURL(path.join(directory, "prev.ts")),
 	...process.argv.slice(2)
 ], options);
