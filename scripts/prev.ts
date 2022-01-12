@@ -252,9 +252,9 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	fs.mkdirSync(path.join(baseDirectory, "config", "dev"), { "recursive": true });
 	fs.mkdirSync(path.join(baseDirectory, "config", "prod"), { "recursive": true });
 
-	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "dev", "example.ts"), path.join(baseDirectory, "config", "dev", "example.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "prod", "example.ts"), path.join(baseDirectory, "config", "prod", "example.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "config", "dev", "example.ts"), path.join(baseDirectory, "config", "dev", "example.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "config", "prod", "example.ts"), path.join(baseDirectory, "config", "prod", "example.ts"));
 
 	fs.copyFileSync(path.join(prevDirectory, ".eslintrc.json"), path.join(baseDirectory, ".eslintrc.json"));
 	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));

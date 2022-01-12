@@ -40,13 +40,13 @@ console.log("\n" + [
 	"> node",
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	url.pathToFileURL(path.join(directory, "prev.ts")),
+	path.join(directory, "prev.ts"),
 	...process.argv.slice(2)
 ].join(" ") + "\n");
 
 spawnSync("node", [
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	url.pathToFileURL(path.join(directory, "prev.ts")),
+	path.join(directory, "prev.ts"),
 	...process.argv.slice(2)
 ], options);
