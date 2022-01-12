@@ -1,3 +1,8 @@
+/* eslint-disable function-call-argument-newline */
+
+import * as fs from "fs";
+import * as path from "path";
+
 function parse(template) {
 	const buffer = [];
 
@@ -77,7 +82,34 @@ function compile(nodes) {
 	return buffer.join("\n");
 }
 
+// All `extras` must receive `data` as their first argument
+const extras = {
+	"include": function(data, file) {
+		const basePath = path.join(__dirname, "..", "views");
+		const fullPath = path.join(basePath, file);
+
+		if (path.resolve(fullPath).startsWith(basePath)) {
+			if (fs.existsSync(fullPath)) {
+				if (fs.statSync(fullPath).isFile()) {
+					return render(fs.readdirSync(fullPath, { "encoding": "utf8" }), data);
+				}
+			}
+		}
+	}
+};
+
 export function render(template, data) {
 	// eslint-disable-next-line no-new-func, @typescript-eslint/no-implied-eval
-	return new Function(...Object.keys(data), compile(parse(template)))(...Object.values(data));
+	return new Function(
+		...Object.keys(data),
+		...Object.keys(extras),
+		compile(parse(template))
+	)(
+		...Object.values(data),
+		...Object.values(extras).map(function(extra: (...args) => string) {
+			return function(...args) {
+				return extra(data, ...args);
+			};
+		})
+	);
 }

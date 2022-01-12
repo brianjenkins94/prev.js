@@ -4,7 +4,10 @@ import * as fs from "fs";
 import * as path from "path";
 
 const argv = (function parseArgs(args) {
-	const argv = {};
+	// Defaults
+	const argv = {
+		"exclude": ["package.json", "package-lock.json"]
+	};
 
 	args = args.join(" ").match(/-(.*?)(?= +-|$)/gu) || [];
 
@@ -30,6 +33,7 @@ const argv = (function parseArgs(args) {
 	return argv;
 })(process.argv);
 
+// Aliases
 for (const [shorthand, alias] of Object.entries({
 	"d": "dry-run",
 	"r": "recursive",
@@ -42,8 +46,6 @@ for (const [shorthand, alias] of Object.entries({
 
 	delete argv[shorthand];
 }
-
-argv["exclude"] = argv["exclude"] ?? ["package.json", "package-lock.json"];
 
 let readline;
 
@@ -60,9 +62,9 @@ const baseDirectory = process.cwd();
 function confirm(prompt, defaultOption = true) {
 	return new Promise(function(resolve, reject) {
 		readline.question(prompt + (defaultOption ? " [Y/n] " : " [y/N] "), async function(answer) {
-			if (/^y(es)?$/iu.test(answer) || (answer === "" && defaultOption)) {
+			if (/^y(es)?$/iu.test(answer) || (answer === "" && defaultOption === true)) {
 				resolve(true);
-			} else if (/^n(o)?$/iu.test(answer) || (answer === "" && defaultOption)) {
+			} else if (/^n(o)?$/iu.test(answer) || (answer === "" && defaultOption === false)) {
 				resolve(false);
 			} else {
 				resolve(await confirm(prompt, defaultOption));
@@ -238,17 +240,17 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		execSync("npm init", { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
+
+		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
 
 	fs.mkdirSync(path.join(baseDirectory, "config"), { "recursive": true });
 	fs.mkdirSync(path.join(baseDirectory, "config", "dev"), { "recursive": true });
 	fs.mkdirSync(path.join(baseDirectory, "config", "prod"), { "recursive": true });
-	fs.mkdirSync(path.join(baseDirectory, "config", "dev", "example"), { "recursive": true });
-	fs.mkdirSync(path.join(baseDirectory, "config", "prod", "example"), { "recursive": true });
 
 	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "dev", "example", "index.ts"), path.join(baseDirectory, "config", "dev", "index.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "prod", "example", "index.ts"), path.join(baseDirectory, "config", "prod", "index.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "dev", "example.ts"), path.join(baseDirectory, "config", "dev", "example.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "dotfiles", "config", "prod", "example.ts"), path.join(baseDirectory, "config", "prod", "example.ts"));
 
 	fs.copyFileSync(path.join(prevDirectory, ".eslintrc.json"), path.join(baseDirectory, ".eslintrc.json"));
 	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
@@ -256,7 +258,7 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	fs.mkdirSync(path.join(baseDirectory, ".vscode"), { "recursive": true });
 
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "extensions.json"), path.join(baseDirectory, ".vscode", "extensions.json"));
-
+	fs.copyFileSync(path.join(prevDirectory, ".vscode", "launch.json"), path.join(baseDirectory, ".vscode", "launch.json"));
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "settings.json"), path.join(baseDirectory, ".vscode", "settings.json"));
 
 	if (readline !== undefined) {

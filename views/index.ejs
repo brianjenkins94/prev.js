@@ -8,7 +8,7 @@
 	<meta name="description" content="" />
 
 	<!-- Title -->
-	<title><%~ title %></title>
+	<title><%- title %></title>
 
 	<!-- Thumbnails -->
 	<link rel="icon" href="/images/favicon.png" />
@@ -17,42 +17,34 @@
 	<link href="https://fonts.googleapis.com/css?family=Raleway:300&display=swap" rel="stylesheet">
 
 	<!-- Libraries -->
-	<%~ styles %>
+	<%- styles %>
 
 	<!-- Stylesheets -->
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/css/overrides.css" />
 
 	<!-- Inline Stylesheet -->
-	<style>
-		.row {
-			background-color: #ffffff;
-		}
-		.row > * {
-			padding: 4rem;
-		}
-
-	</style>
+	<style></style>
 
 </head>
 <body>
 
-	<%~ include("partials/_header") %>
+	<%- include("partials/_header") %>
 
-	<%~ markup %>
+	<%- markup %>
 
-	<%~ include("partials/_footer") %>
+	<%- include("partials/_footer") %>
 
 	<!-- Libraries -->
-	<%~ scripts %>
+	<%- scripts %>
 
 	<!-- Inline Script -->
 	<script>
 
-		<%~ beforeDocumentReady.toString().split("\n").slice(1, -1).join("\n") %>
+		<%- beforeDocumentReady.toString().split("\n").slice(1, -1).join("\n") %>
 
 		document.addEventListener("DOMContentLoaded", async function(event) {
-			<%~ documentReady.toString().split("\n").slice(1, -1).join("\n") %>
+			<%- documentReady.toString().split("\n").slice(1, -1).join("\n") %>
 		});
 
 	</script>
