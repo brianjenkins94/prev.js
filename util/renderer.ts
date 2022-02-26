@@ -2,6 +2,10 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import * as url from "url";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function parse(template) {
 	const buffer = [];
@@ -16,13 +20,15 @@ function parse(template) {
 		index = match[0].length + match.index;
 		const prefix = match[1] ?? "";
 
+		buffer.push(template.substring(index, closeTagRegex.lastIndex).replace(/\n/gu, "").replace(/"/gu, "\\\""));
+
 		closeTagRegex.lastIndex = index;
 
 		let closeTag;
 
 		while (closeTag = closeTagRegex.exec(template)) {
 			if (closeTag[1] !== undefined) {
-				const value = template.slice(index, closeTag.index);
+				const value = template.substring(index, closeTag.index);
 
 				index = closeTagRegex.lastIndex;
 				openTagRegex.lastIndex = index;
@@ -79,6 +85,7 @@ function compile(nodes) {
 
 	buffer.push("return buffer.join(\"\\n\");");
 
+	console.log(buffer.join("\n"));
 	return buffer.join("\n");
 }
 

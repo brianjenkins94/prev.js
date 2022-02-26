@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/node": "latest",
     "juvy": "latest",
-    "next": "canary",
+    "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "ts-node": "latest",

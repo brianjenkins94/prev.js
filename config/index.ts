@@ -62,7 +62,7 @@ await (async function recurse(directory, parent) {
 						};
 					}
 				}
-			})((await import(path.join(directory, file)))["default"], parent);
+			})((await import(url.pathToFileURL(path.join(directory, file)).toString()))["default"], parent);
 		}
 	}
 })(__dirname, schema);

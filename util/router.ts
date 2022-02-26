@@ -3,6 +3,10 @@ import { render } from "./renderer";
 
 import * as fs from "fs";
 import * as path from "path";
+import * as url from "url";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function processRouteLayer(routeHandlers) {
 	const routes = [];
@@ -17,7 +21,13 @@ function processRouteLayer(routeHandlers) {
 			},
 			"fn": async function(request, response, _, parsedUrl) {
 				response.render = function(fileName, data) {
-					response.send(render(fs.readFileSync(fileName, { "encoding": "utf8" }), data));
+					const file = path.join(__dirname, "..", "views", fileName + ".ejs");
+
+					if (fs.existsSync(file)) {
+						response.send(render(fs.readFileSync(file, { "encoding": "utf8" }), data));
+					} else {
+						response.status(404);
+					}
 				};
 
 				/// @ts-expect-error
@@ -67,7 +77,7 @@ export async function routeify(routesDirectory) {
 
 					routeLayer[pathName] = {};
 
-					const routeHandler = await import(file);
+					const routeHandler = await import(url.pathToFileURL(file).toString());
 
 					for (const exportName of Object.keys(routeHandler)) {
 						if (/middleware$/iu.test(exportName)) {
