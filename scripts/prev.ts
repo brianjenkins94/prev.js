@@ -7,11 +7,8 @@ import * as url from "url";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const argv = (function parseArgs(args) {
-	// Defaults
-	const argv = {
-		"exclude": ["package.json", "package-lock.json"]
-	};
+const argv = (function parseArgs(args, defaults = {}) {
+	const argv = defaults;
 
 	args = args.join(" ").match(/-(.*?)(?= +-|$)/gu) || [];
 
@@ -35,7 +32,9 @@ const argv = (function parseArgs(args) {
 	}
 
 	return argv;
-})(process.argv);
+})(process.argv, {
+	"exclude": ["package.json", "package-lock.json"]
+});
 
 // Aliases
 for (const [shorthand, alias] of Object.entries({
@@ -245,8 +244,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
 
-	const dependencies = ["typescript", "ts-node", "@types/node"];
-	const devDependencies = ["eslint", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser"];
+	const dependencies = ["@types/node", "juvy", "next", "react-dom", "react", "ts-node", "typescript"];
+	const devDependencies = ["@types/react", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser", "eslint@7.32.0"];
 
 	fs.copyFileSync(path.join(prevDirectory, ".eslintrc.json"), path.join(baseDirectory, ".eslintrc.json"));
 
@@ -278,11 +277,6 @@ if (argv["recursive"] === true && argv["update"] === true) {
 
 	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
 
-	fs.mkdirSync(path.join(baseDirectory, "util"), { "recursive": true });
-
-	fs.copyFileSync(path.join(prevDirectory, "util", "renderer.ts"), path.join(baseDirectory, "util", "renderer.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "util", "router.ts"), path.join(baseDirectory, "util", "router.ts"));
-
 	if (argv["yes"] === true || await confirm("GitHub Actions?")) {
 		fs.mkdirSync(path.join(baseDirectory, ".github", "workflows"), { "recursive": true });
 
@@ -290,6 +284,11 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	}
 
 	if (argv["yes"] === true || await confirm("Express?")) {
+		fs.mkdirSync(path.join(baseDirectory, "util"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, "util", "renderer.ts"), path.join(baseDirectory, "util", "renderer.ts"));
+		fs.copyFileSync(path.join(prevDirectory, "util", "router.ts"), path.join(baseDirectory, "util", "router.ts"));
+
 		fs.mkdirSync(path.join(baseDirectory, "views", "partials"), { "recursive": true });
 
 		fs.copyFileSync(path.join(prevDirectory, "views", "index.ejs"), path.join(baseDirectory, "views", "index.ejs"));
@@ -298,6 +297,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	}
 
 	if (argv["yes"] === true || await confirm("Cypress?")) {
+		devDependencies.push("cypress");
+
 		fs.copyFileSync(path.join(prevDirectory, "cypress.json"), path.join(baseDirectory, "cypress.json"));
 
 		fs.mkdirSync(path.join(baseDirectory, "cypress", "integration"), { "recursive": true });
@@ -311,6 +312,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	}
 
 	if (argv["yes"] === true || await confirm("Ava?")) {
+		devDependencies.push("ava");
+
 		fs.copyFileSync(path.join(prevDirectory, "ava.config.js"), path.join(baseDirectory, "ava.config.js"));
 
 		fs.mkdirSync(path.join(baseDirectory, "test"), { "recursive": true });
