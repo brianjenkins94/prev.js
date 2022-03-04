@@ -12,6 +12,11 @@ let directory = __dirname;
 const options = {
 	"cwd": process.cwd(),
 	"encoding": "utf8",
+	"env": {
+		...process.env,
+		"TS_NODE_PROJECT": path.join(directory, "tsconfig.json"), // https://github.com/TypeStrong/ts-node/pull/1655
+		"TS_NODE_SKIP_IGNORE": true
+	},
 	"stdio": "inherit"
 };
 
@@ -36,17 +41,14 @@ if (process.platform === "win32") {
 	}
 }
 
-console.log("\n" + [
-	"> node",
-	"--experimental-specifier-resolution=node",
-	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	path.join(directory, "prev.ts"),
+const command = [
+	"node",
+	//"--experimental-specifier-resolution=node",
+	"--loader=" + path.join(directory, "..", "ts-node", "esm.mjs"),
+	path.join(directory, "hello.ts"),
 	...process.argv.slice(2)
-].join(" ") + "\n");
+];
 
-spawnSync("node", [
-	"--experimental-specifier-resolution=node",
-	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	path.join(directory, "prev.ts"),
-	...process.argv.slice(2)
-], options);
+console.log("\n> " + command.join(" ") + "\n");
+
+spawnSync(command[0], command.slice(1), options);

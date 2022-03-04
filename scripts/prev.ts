@@ -238,9 +238,6 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		}
 	}
 } else {
-	const dependencies = ["typescript", "ts-node", "@types/node"];
-	const devDependencies = ["eslint", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser"];
-
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		execSync("npm init", { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
@@ -248,22 +245,76 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
 
-	fs.mkdirSync(path.join(baseDirectory, "config"), { "recursive": true });
-	fs.mkdirSync(path.join(baseDirectory, "config", "dev"), { "recursive": true });
-	fs.mkdirSync(path.join(baseDirectory, "config", "prod"), { "recursive": true });
-
-	fs.copyFileSync(path.join(prevDirectory, "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "config", "dev", "example.ts"), path.join(baseDirectory, "config", "dev", "example.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "config", "prod", "example.ts"), path.join(baseDirectory, "config", "prod", "example.ts"));
+	const dependencies = ["typescript", "ts-node", "@types/node"];
+	const devDependencies = ["eslint", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser"];
 
 	fs.copyFileSync(path.join(prevDirectory, ".eslintrc.json"), path.join(baseDirectory, ".eslintrc.json"));
-	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
 
 	fs.mkdirSync(path.join(baseDirectory, ".vscode"), { "recursive": true });
 
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "extensions.json"), path.join(baseDirectory, ".vscode", "extensions.json"));
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "launch.json"), path.join(baseDirectory, ".vscode", "launch.json"));
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "settings.json"), path.join(baseDirectory, ".vscode", "settings.json"));
+
+	fs.copyFileSync(path.join(prevDirectory, "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
+
+	fs.mkdirSync(path.join(baseDirectory, "config", "dev"), { "recursive": true });
+	fs.mkdirSync(path.join(baseDirectory, "config", "prod"), { "recursive": true });
+
+	fs.copyFileSync(path.join(prevDirectory, "config", "dev", "example.ts"), path.join(baseDirectory, "config", "dev", "example.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "config", "prod", "example.ts"), path.join(baseDirectory, "config", "prod", "example.ts"));
+
+	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
+
+	fs.mkdirSync(path.join(baseDirectory, "pages"), { "recursive": true });
+
+	fs.copyFileSync(path.join(prevDirectory, "pages", "index.ts"), path.join(baseDirectory, "pages", "index.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "pages", "_app.ts"), path.join(baseDirectory, "pages", "_app.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "pages", "_document.ts"), path.join(baseDirectory, "pages", "_document.ts"));
+
+	fs.copyFileSync(path.join(prevDirectory, "server.ts"), path.join(baseDirectory, "server.ts"));
+
+	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
+
+	fs.mkdirSync(path.join(baseDirectory, "util"), { "recursive": true });
+
+	fs.copyFileSync(path.join(prevDirectory, "util", "renderer.ts"), path.join(baseDirectory, "util", "renderer.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "util", "router.ts"), path.join(baseDirectory, "util", "router.ts"));
+
+	if (argv["yes"] === true || await confirm("GitHub Actions?")) {
+		fs.mkdirSync(path.join(baseDirectory, ".github", "workflows"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, ".github", "workflows", "ci.yml"), path.join(baseDirectory, ".github", "workflows", "ci.yml"));
+	}
+
+	if (argv["yes"] === true || await confirm("Express?")) {
+		fs.mkdirSync(path.join(baseDirectory, "views", "partials"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, "views", "index.ejs"), path.join(baseDirectory, "views", "index.ejs"));
+		fs.copyFileSync(path.join(prevDirectory, "views", "partials", "_header.ejs"), path.join(baseDirectory, "views", "partials", "_header.ejs"));
+		fs.copyFileSync(path.join(prevDirectory, "views", "partials", "_footer.ejs"), path.join(baseDirectory, "views", "partials", "_footer.ejs"));
+	}
+
+	if (argv["yes"] === true || await confirm("Cypress?")) {
+		fs.copyFileSync(path.join(prevDirectory, "cypress.json"), path.join(baseDirectory, "cypress.json"));
+
+		fs.mkdirSync(path.join(baseDirectory, "cypress", "integration"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, "cypress", "integration", "sanity.test.ts"), path.join(baseDirectory, "cypress", "integration", "sanity.test.ts"));
+
+		fs.mkdirSync(path.join(baseDirectory, "cypress", "plugins"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, "cypress", "plugins", "index.ts"), path.join(baseDirectory, "cypress", "plugins", "index.ts"));
+		fs.copyFileSync(path.join(prevDirectory, "cypress", "plugins", "log.ts"), path.join(baseDirectory, "cypress", "plugins", "log.ts"));
+	}
+
+	if (argv["yes"] === true || await confirm("Ava?")) {
+		fs.copyFileSync(path.join(prevDirectory, "ava.config.js"), path.join(baseDirectory, "ava.config.js"));
+
+		fs.mkdirSync(path.join(baseDirectory, "test"), { "recursive": true });
+
+		fs.copyFileSync(path.join(prevDirectory, "test", "sanity.test.ts"), path.join(baseDirectory, "test", "sanity.test.ts"));
+	}
 
 	if (readline !== undefined) {
 		readline.close();
