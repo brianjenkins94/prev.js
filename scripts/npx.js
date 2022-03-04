@@ -43,7 +43,7 @@ if (process.platform === "win32") {
 
 const command = [
 	"node",
-	//"--experimental-specifier-resolution=node",
+	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
 	path.join(directory, "hello.ts"),
 	...process.argv.slice(2)
