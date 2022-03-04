@@ -14,7 +14,7 @@ const options = {
 	"encoding": "utf8",
 	"env": {
 		...process.env,
-		"TS_NODE_PROJECT": path.join(directory, "tsconfig.json"), // https://github.com/TypeStrong/ts-node/pull/1655
+		"TS_NODE_PROJECT": path.join(directory, "..", "tsconfig.json"), // https://github.com/TypeStrong/ts-node/pull/1655
 		"TS_NODE_SKIP_IGNORE": true
 	},
 	"stdio": "inherit"
