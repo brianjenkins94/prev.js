@@ -7,14 +7,14 @@ import * as url from "url";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let directory = __dirname;
+let prevDirectory = path.join(__dirname, "..");
 
 const options = {
 	"cwd": process.cwd(),
 	"encoding": "utf8",
 	"env": {
 		...process.env,
-		"TS_NODE_PROJECT": path.join(directory, "..", "tsconfig.json"), // https://github.com/TypeStrong/ts-node/pull/1655
+		"TS_NODE_PROJECT": path.join(prevDirectory, "tsconfig.json"), // https://github.com/TypeStrong/ts-node/pull/1655
 		"TS_NODE_SKIP_IGNORE": true
 	},
 	"stdio": "inherit"
@@ -44,8 +44,8 @@ if (process.platform === "win32") {
 const command = [
 	"node",
 	"--experimental-specifier-resolution=node",
-	"--loader=" + path.join(directory, "..", "..", "ts-node", "esm"),
-	path.join(directory, "hello.ts"),
+	"--loader=" + path.join(prevDirectory, "..", "ts-node", "esm"),
+	path.join(prevDirectory, "hello.ts"),
 	...process.argv.slice(2)
 ];
 
