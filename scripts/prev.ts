@@ -60,7 +60,7 @@ if (argv["yes"] !== true) {
 	});
 }
 
-const prevDirectory = path.join(__dirname);
+const prevDirectory = path.join(__dirname, "..");
 const baseDirectory = process.cwd();
 
 function confirm(prompt, defaultOption = true) {
