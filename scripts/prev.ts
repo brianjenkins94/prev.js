@@ -270,9 +270,9 @@ if (argv["recursive"] === true && argv["update"] === true) {
 
 	fs.mkdirSync(path.join(baseDirectory, "pages"), { "recursive": true });
 
-	fs.copyFileSync(path.join(prevDirectory, "pages", "index.ts"), path.join(baseDirectory, "pages", "index.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "pages", "_app.ts"), path.join(baseDirectory, "pages", "_app.ts"));
-	fs.copyFileSync(path.join(prevDirectory, "pages", "_document.ts"), path.join(baseDirectory, "pages", "_document.ts"));
+	fs.copyFileSync(path.join(prevDirectory, "pages", "index.tsx"), path.join(baseDirectory, "pages", "index.tsx"));
+	fs.copyFileSync(path.join(prevDirectory, "pages", "_app.tsx"), path.join(baseDirectory, "pages", "_app.tsx"));
+	fs.copyFileSync(path.join(prevDirectory, "pages", "_document.tsx"), path.join(baseDirectory, "pages", "_document.tsx"));
 
 	fs.copyFileSync(path.join(prevDirectory, "server.ts"), path.join(baseDirectory, "server.ts"));
 
