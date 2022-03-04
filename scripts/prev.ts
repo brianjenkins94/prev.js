@@ -256,6 +256,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "launch.json"), path.join(baseDirectory, ".vscode", "launch.json"));
 	fs.copyFileSync(path.join(prevDirectory, ".vscode", "settings.json"), path.join(baseDirectory, ".vscode", "settings.json"));
 
+	fs.mkdirSync(path.join(baseDirectory, "config"), { "recursive": true });
+
 	fs.copyFileSync(path.join(prevDirectory, "config", "index.ts"), path.join(baseDirectory, "config", "index.ts"));
 
 	fs.mkdirSync(path.join(baseDirectory, "config", "dev"), { "recursive": true });
