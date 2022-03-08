@@ -7,7 +7,7 @@ import * as url from "url";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const argv = (function parseArgs(args, defaults = {}) {
+const argv = (function parseArgs(args, defaults: object = {}) {
 	const argv = defaults;
 
 	args = args.join(" ").match(/-(.*?)(?= +-|$)/gu) || [];
