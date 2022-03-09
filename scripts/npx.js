@@ -10,8 +10,6 @@ const __dirname = path.dirname(__filename);
 
 let baseDirectory = path.join(__dirname, "..");
 
-console.log("Base Directory: " + baseDirectory);
-
 const options = {
 	"cwd": process.cwd(),
 	"encoding": "utf8",
@@ -44,7 +42,7 @@ const command = [
 	"node",
 	"--experimental-specifier-resolution=node",
 	"--loader=" + url.pathToFileURL(path.join(baseDirectory, "..", "ts-node", "esm.mjs")).toString(),
-	path.join(baseDirectory, "scripts", "prev.ts").replace(/\\/g, "/"),
+	url.pathToFileURL(path.join(baseDirectory, "scripts", "prev.ts")).toString(),
 	...process.argv.slice(2)
 ];
 
