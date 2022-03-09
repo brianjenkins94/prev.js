@@ -42,7 +42,7 @@ const command = [
 	"node",
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(baseDirectory, "..", "ts-node", "esm"),
-	path.join(baseDirectory, "scripts", "prev.ts"),
+	url.pathToFileURL(path.join(baseDirectory, "scripts", "prev.ts")).toString(),
 	...process.argv.slice(2)
 ];
 
