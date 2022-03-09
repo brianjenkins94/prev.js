@@ -27,7 +27,7 @@ if (process.platform === "win32") {
 
 	if (fs.existsSync(bash)) {
 		options["env"] = {
-			"PATH": "/mingw64/bin:/usr/local/bin:/usr/bin:/bin"
+			"PATH": process.env.PATH // "/mingw64/bin:/usr/local/bin:/usr/bin:/bin"
 		};
 
 		options["shell"] = bash;
