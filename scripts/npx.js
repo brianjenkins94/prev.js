@@ -26,7 +26,7 @@ if (process.platform === "win32") {
 	const wsl = path.join(process.env.windir, "System32", "bash.exe");
 
 	if (fs.existsSync(bash)) {
-		options["shell"] = url.pathToFileURL(bash);
+		options["shell"] = url.pathToFileURL(bash).toString();
 	} else if (fs.existsSync(wsl)) {
 		const { root, dir, base } = path.parse(directory);
 
