@@ -43,7 +43,7 @@ if (process.platform === "win32") {
 const command = [
 	"node",
 	"--experimental-specifier-resolution=node",
-	"--loader=" + url.pathToFileURL(path.join(baseDirectory, "..", "ts-node", "esm.mjs")).toString(),
+	"--loader=" + path.join(baseDirectory, "..", "ts-node", "esm.mjs"),
 	path.join(baseDirectory, "scripts", "prev.ts"),
 	...process.argv.slice(2)
 ];
