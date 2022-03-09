@@ -22,17 +22,17 @@ const options = {
 };
 
 if (process.platform === "win32") {
-	const bash = url.pathToFileURL(path.join(process.env.ProgramW6432, "Git", "usr", "bin", "bash.exe")).toString();
-	const wsl = url.pathToFileURL(path.join(process.env.windir, "System32", "bash.exe")).toString();
+	const bash = path.join(process.env.ProgramW6432, "Git", "usr", "bin", "bash.exe");
+	const wsl = path.join(process.env.windir, "System32", "bash.exe");
 
 	if (fs.existsSync(bash)) {
-		options["shell"] = bash;
+		options["shell"] = url.pathToFileURL(bash).toString();
 	} else if (fs.existsSync(wsl)) {
 		const { root, dir, base } = path.parse(directory);
 
 		directory = "/mnt/" + root.split(":")[0].toLowerCase() + "/" + dir.substring(root.length).replace(/\\/g, "/") + "/" + base;
 
-		options["shell"] = wsl;
+		options["shell"] = url.pathToFileURL(wsl).toString();
 	} else {
 		throw new Error("No suitable shell found. Aborting.");
 	}
