@@ -26,11 +26,7 @@ if (process.platform === "win32") {
 	const wsl = path.join(process.env.windir, "System32", "bash.exe");
 
 	if (fs.existsSync(bash)) {
-		options["env"] = {
-			"PATH": process.env.PATH // "/mingw64/bin:/usr/local/bin:/usr/bin:/bin"
-		};
-
-		options["shell"] = bash;
+		options["shell"] = url.pathToFileURL(bash);
 	} else if (fs.existsSync(wsl)) {
 		const { root, dir, base } = path.parse(directory);
 
