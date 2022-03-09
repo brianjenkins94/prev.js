@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 let baseDirectory = path.join(__dirname, "..");
 
 const options = {
-	"cwd": process.cwd(),
+	"cwd": url.pathToFileURL(process.cwd()).toString(),
 	"encoding": "utf8",
 	"env": {
 		...process.env,
@@ -22,11 +22,11 @@ const options = {
 };
 
 if (process.platform === "win32") {
-	const bash = path.join(process.env.ProgramW6432, "Git", "usr", "bin", "bash.exe");
-	const wsl = path.join(process.env.windir, "System32", "bash.exe");
+	const bash = url.pathToFileURL(path.join(process.env.ProgramW6432, "Git", "usr", "bin", "bash.exe")).toString();
+	const wsl = url.pathToFileURL(path.join(process.env.windir, "System32", "bash.exe")).toString();
 
 	if (fs.existsSync(bash)) {
-		options["shell"] = url.pathToFileURL(bash).toString();
+		options["shell"] = bash;
 	} else if (fs.existsSync(wsl)) {
 		const { root, dir, base } = path.parse(directory);
 
@@ -42,7 +42,7 @@ const command = [
 	"node",
 	"--experimental-specifier-resolution=node",
 	"--loader=" + path.join(baseDirectory, "..", "ts-node", "esm"),
-	url.pathToFileURL(path.join(baseDirectory, "scripts", "prev.ts")).toString(),
+	path.join(baseDirectory, "scripts", "prev.ts"),
 	...process.argv.slice(2)
 ];
 
