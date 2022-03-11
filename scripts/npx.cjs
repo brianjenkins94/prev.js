@@ -5,4 +5,4 @@
 
 //spawn(["--esm", path.join(__dirname, "prev.ts"), ...process.argv.slice(2)]);
 
-require("ts-node/dist/bin").main(["--esm", __dirname + "/cli.ts", ...process.argv.slice(2)]);
+require("ts-node/dist/bin").main(["--esm", __dirname + "/prev.ts", ...process.argv.slice(2)]);
