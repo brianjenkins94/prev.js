@@ -6,7 +6,7 @@ import * as url from "url";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+console.log(process.argv);
 const argv = (function parseArgs(args, defaults: object = {}) {
 	const argv = defaults;
 
