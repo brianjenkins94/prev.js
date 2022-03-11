@@ -2,7 +2,7 @@
   "name": "prev",
   "version": "1.0.0",
   "description": "The React framework for people who don't want to learn React.",
-  "bin": "scripts/npx.js",
+  "bin": "scripts/npx.cjs",
   "type": "module",
   "scripts": {
     "cypress": "cypress run",
