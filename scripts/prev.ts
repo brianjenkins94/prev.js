@@ -1,5 +1,7 @@
 #!/usr/bin/env -S npx ts-node --esm
 
+console.log("GOOD GRIEF.");
+
 import { createInterface } from "readline";
 import { execSync } from "child_process";
 import * as fs from "fs";
