@@ -1,3 +1,5 @@
+#!/usr/bin/env npx ts-node-esm
+
 import { createInterface } from "readline";
 import { execSync } from "child_process";
 import * as fs from "fs";
