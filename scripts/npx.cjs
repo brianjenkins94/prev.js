@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-const path = require("path");
-const spawn = require("ts-node/dist/bin").main;
+//const path = require("path");
+//const spawn = require("ts-node/dist/bin").main;
 
-spawn(["--esm", path.join(__dirname, "prev.ts"), ...process.argv.slice(2)]);
+//spawn(["--esm", path.join(__dirname, "prev.ts"), ...process.argv.slice(2)]);
+
+require("ts-node/dist/bin").main(["--esm", __dirname + "/cli.ts", ...process.argv.slice(2)]);
