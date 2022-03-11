@@ -1,5 +1,3 @@
-console.log("1");
-
 import { createInterface } from "readline";
 import { execSync } from "child_process";
 import * as fs from "fs";
@@ -8,8 +6,6 @@ import * as url from "url";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-console.log("2");
 
 const argv = (function parseArgs(args, defaults: object = {}) {
 	const argv = defaults;
@@ -39,8 +35,6 @@ const argv = (function parseArgs(args, defaults: object = {}) {
 })(process.argv, {
 	"exclude": ["package.json", "package-lock.json"]
 });
-
-console.log("3");
 
 // Aliases
 for (const [shorthand, alias] of Object.entries({
@@ -218,8 +212,6 @@ function retab(file) {
 	});
 }
 
-console.log("4");
-
 if (argv["recursive"] === true && argv["update"] === true) {
 	const repositories = findRepositories(baseDirectory);
 
@@ -245,12 +237,16 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		}
 	}
 } else {
+	console.log("1");
+
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		execSync("npm init", { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
 
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
+
+	console.log("2");
 
 	const dependencies = ["@types/node", "juvy", "next", "react-dom", "react", "ts-node", "typescript"];
 	const devDependencies = ["@types/react", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser", "eslint@7.32.0"];
@@ -339,5 +335,3 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	console.log("> npm install --save-dev " + devDependencies.join(" ") + "\n");
 	execSync("npm install --save-dev " + devDependencies.join(" "), { "cwd": baseDirectory, "stdio": "inherit" });
 }
-
-console.log("5");
