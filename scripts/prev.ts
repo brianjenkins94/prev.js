@@ -6,11 +6,11 @@ import * as url from "url";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-console.log(process.argv);
+
 const argv = (function parseArgs(args, defaults: object = {}) {
 	const argv = defaults;
 
-	args = args.join(" ").match(/-(.*?)(?= +-|$)/gu) || [];
+	args = args.join(" ").match(/(?<=^| )-(.*?)(?= +-|$)/gu) || [];
 
 	for (let x = 0; x < args.length; x++) {
 		const arg = args[x];
@@ -212,12 +212,7 @@ function retab(file) {
 	});
 }
 
-console.log("1");
-console.log(argv);
-
 if (argv["recursive"] === true && argv["update"] === true) {
-	console.log("2");
-
 	const repositories = findRepositories(baseDirectory);
 
 	for (const repository of repositories) {
@@ -236,24 +231,18 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		}
 	}
 } else if (argv["update"] === true) {
-	console.log("3");
-
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		if (await confirm("Are you sure you're in the right place?", false)) {
 			update();
 		}
 	}
 } else {
-	console.log("4");
-
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		execSync("npm init", { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
 
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
-
-	console.log("5");
 
 	const dependencies = ["@types/node", "juvy", "next", "react-dom", "react", "ts-node", "typescript"];
 	const devDependencies = ["@types/react", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser", "eslint@7.32.0"];
