@@ -213,6 +213,7 @@ function retab(file) {
 }
 
 console.log("1");
+console.log(argv);
 
 if (argv["recursive"] === true && argv["update"] === true) {
 	console.log("2");
