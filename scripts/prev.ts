@@ -212,7 +212,11 @@ function retab(file) {
 	});
 }
 
+console.log("1");
+
 if (argv["recursive"] === true && argv["update"] === true) {
+	console.log("2");
+
 	const repositories = findRepositories(baseDirectory);
 
 	for (const repository of repositories) {
@@ -231,13 +235,15 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		}
 	}
 } else if (argv["update"] === true) {
+	console.log("3");
+
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		if (await confirm("Are you sure you're in the right place?", false)) {
 			update();
 		}
 	}
 } else {
-	console.log("1");
+	console.log("4");
 
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
 		execSync("npm init", { "cwd": baseDirectory, "stdio": "inherit" });
@@ -246,7 +252,7 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
 	}
 
-	console.log("2");
+	console.log("5");
 
 	const dependencies = ["@types/node", "juvy", "next", "react-dom", "react", "ts-node", "typescript"];
 	const devDependencies = ["@types/react", "@typescript-eslint/eslint-plugin", "@typescript-eslint/parser", "eslint@7.32.0"];
