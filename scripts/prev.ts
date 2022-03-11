@@ -1,5 +1,3 @@
-#!/usr/bin/env -S npx ts-node --esm
-
 console.log("GOOD GRIEF.");
 
 import { createInterface } from "readline";
