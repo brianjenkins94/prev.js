@@ -28,7 +28,7 @@ const argv = (function parseArgs(args, defaults: object = {}) {
 		const value = arg.split(/ +|=/u);
 		const key = value.shift().replace(/^-+/u, "");
 
-		argv[key] = value.join(" ") ?? (args[x + 1] === undefined || args[x + 1].startsWith("-") || args[x + 1]);
+		argv[key] = value.join(" ") || (args[x + 1] === undefined || args[x + 1].startsWith("-") || args[x + 1]);
 	}
 
 	return argv;
