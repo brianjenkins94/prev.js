@@ -238,8 +238,7 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	}
 } else {
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
-		// @ts-expect-error
-		execSync("npm init", argv["yes"] === true ? ["-y"] : [], { "cwd": baseDirectory, "stdio": "inherit" });
+		execSync("npm init" + (argv["yes"] === true) ? " --yes" : "", { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
 
 		fs.writeFileSync(path.join(baseDirectory, "package.json"), fs.readFileSync(path.join(baseDirectory, "package.json"), { "encoding": "utf-8" }).replace("\"main\": \"index.js\"", "\"type\": \"module\""));
