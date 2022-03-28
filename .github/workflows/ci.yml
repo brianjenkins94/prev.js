@@ -45,7 +45,7 @@
 			"runs-on": "${{ matrix.os }}",
 			"steps": [
 				{
-					"run": "npx brianjenkins94/prev --yes"
+					"run": "npx brianjenkins94/prev -- --yes"
 				},
 				{
 					"uses": "./",
