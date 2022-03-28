@@ -45,7 +45,7 @@ for (const [shorthand, alias] of Object.entries({
 	"x": "exclude",
 	"y": "yes"
 })) {
-	argv[alias] = argv[shorthand] ?? false;
+	argv[alias] = argv[shorthand] ?? argv[alias] ?? false;
 
 	delete argv[shorthand];
 }
