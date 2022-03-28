@@ -64,7 +64,10 @@
 					"run": "npx brianjenkins94/prev -y"
 				},
 				{
-					"run": "npm run test"
+					"with": {
+						"start": "npm run cypress",
+						"wait-on": "http://localhost:3000"
+					},
 				}
 			]
 		}
