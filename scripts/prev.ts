@@ -22,7 +22,7 @@ const argv = (function parseArgs(args, defaults: object = {}) {
 
 			continue;
 		} else if (arg.length === 2) {
-			break;
+			continue;
 		}
 
 		const value = arg.split(/ +|=/u);
