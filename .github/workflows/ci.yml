@@ -15,6 +15,9 @@
 					"uses": "actions/checkout@v2"
 				},
 				{
+					"run": "npm install"
+				},
+				{
 					"run": "npm run lint"
 				}
 			]
@@ -68,7 +71,7 @@
 					"with": {
 						"start": "npm run cypress",
 						"wait-on": "http://localhost:3000"
-					},
+					}
 				}
 			]
 		}

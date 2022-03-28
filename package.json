@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "cypress": "cypress run",
-    "lint": "npx eslint --ignore-pattern \"public/**/*\" --quiet \"**/*.ts\"",
+    "lint": "eslint --ignore-pattern \"public/**/*\" --quiet \"**/*.ts\"",
     "publish": "({ next build ; kill -INT 0 ; } & while sleep 1; do echo \"{\n  \\\"type\\\": \\\"CommonJS\\\"\n}\" > .next/package.json; done)",
     "start": "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts",
     "test": "ava"
