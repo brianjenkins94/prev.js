@@ -25,8 +25,8 @@
     "@types/node": "latest",
     "juvy": "latest",
     "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
     "ts-node": "latest",
     "typescript": "latest"
   },
