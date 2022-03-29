@@ -44,7 +44,7 @@ await (async function recurse(directory, parent) {
 					if (!Object.prototype.hasOwnProperty.call(option, "default")) {
 						recurse(option, parent[name]);
 					} else {
-						const namespace = directory.substring(__dirname.length + 1).replace(/\\/gu, "/").slice(1).split(/\//gu);
+						const namespace = directory.substring(__dirname.length + 1).replace(/\\/u, "/").substring(1).split(/\//u);
 
 						const env = option["env"] || namespace.join("_").toUpperCase();
 						const arg = option["arg"] || namespace.join("-");

@@ -48,7 +48,7 @@
 					"run": "npx brianjenkins94/prev -- --yes"
 				},
 				{
-					"uses": "./",
+					"uses": "cypress-io/github-action@v2",
 					"with": {
 						"start": "npm run cypress",
 						"wait-on": "http://localhost:3000"
