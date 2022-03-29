@@ -256,8 +256,6 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	}
 } else {
 	if (!fs.existsSync(path.join(baseDirectory, "package.json"))) {
-		console.log(process.argv);
-		console.log(argv);
 		execSync("npm init" + (argv["yes"] === true ? " --yes" : ""), { "cwd": baseDirectory, "stdio": "inherit" });
 		console.log();
 

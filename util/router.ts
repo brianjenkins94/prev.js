@@ -1,4 +1,4 @@
-import { apiResolver } from "next/dist/server/api-utils";
+import apiResolver from "next/dist/server/api-utils";
 import { render } from "./renderer";
 
 import * as fs from "fs";
