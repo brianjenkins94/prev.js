@@ -216,6 +216,20 @@ function retab(file) {
 	});
 }
 
+function addKeyValuePairToJsonFile(key, value, file) {
+	const parsedFile = JSON.parse(fs.readFileSync(file, { "encoding": "utf8" }));
+
+	const lastKey = key.pop();
+
+	const parentKey = key.reduce(function(object, key) {
+		return object[key];
+	}, parsedFile);
+
+	parentKey[lastKey] = value;
+
+	fs.writeFileSync(file, JSON.stringify(parsedFile, undefined, 2));
+}
+
 if (argv["recursive"] === true && argv["update"] === true) {
 	const repositories = findRepositories(baseDirectory);
 
@@ -315,7 +329,12 @@ if (argv["recursive"] === true && argv["update"] === true) {
 
 		fs.copyFileSync(path.join(prevDirectory, "cypress", "plugins", "index.ts"), path.join(baseDirectory, "cypress", "plugins", "index.ts"));
 		fs.copyFileSync(path.join(prevDirectory, "cypress", "plugins", "log.ts"), path.join(baseDirectory, "cypress", "plugins", "log.ts"));
+
+		addKeyValuePairToJsonFile(["scripts", "cypress"], "cypress run", path.join(baseDirectory, "package.json"));
 	}
+
+	addKeyValuePairToJsonFile(["scripts", "lint"], "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts", path.join(baseDirectory, "package.json"));
+	addKeyValuePairToJsonFile(["scripts", "start"], "eslint --ignore-pattern \"public/**/*\" --quiet \"**/*.ts\"", path.join(baseDirectory, "package.json"));
 
 	if (argv["yes"] === true || await confirm("Ava?")) {
 		devDependencies.push("ava");
@@ -325,6 +344,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		fs.mkdirSync(path.join(baseDirectory, "test"), { "recursive": true });
 
 		fs.copyFileSync(path.join(prevDirectory, "test", "sanity.test.ts"), path.join(baseDirectory, "test", "sanity.test.ts"));
+
+		addKeyValuePairToJsonFile(["scripts", "test"], "ava", path.join(baseDirectory, "package.json"));
 	}
 
 	if (readline !== undefined) {

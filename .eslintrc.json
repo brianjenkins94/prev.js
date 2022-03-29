@@ -61,6 +61,7 @@
 		"@typescript-eslint/no-invalid-this": "warn",
 		"@typescript-eslint/no-require-imports": "warn",
 		"@typescript-eslint/no-shadow": "warn",
+		"@typescript-eslint/no-unnecessary-boolean-literal-compare": "warn",
 		"@typescript-eslint/no-unused-vars": "warn",
 		"@typescript-eslint/no-use-before-define": "warn",
 		"@typescript-eslint/prefer-optional-chain": "warn",
