@@ -333,8 +333,8 @@ if (argv["recursive"] === true && argv["update"] === true) {
 		addKeyValuePairToJsonFile(["scripts", "cypress"], "cypress run", path.join(baseDirectory, "package.json"));
 	}
 
-	addKeyValuePairToJsonFile(["scripts", "lint"], "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts", path.join(baseDirectory, "package.json"));
-	addKeyValuePairToJsonFile(["scripts", "start"], "eslint --ignore-pattern \"public/**/*\" --quiet \"**/*.ts\"", path.join(baseDirectory, "package.json"));
+	addKeyValuePairToJsonFile(["scripts", "lint"], "eslint --ignore-pattern \"public/**/*\" --quiet \"**/*.ts\"", path.join(baseDirectory, "package.json"));
+	addKeyValuePairToJsonFile(["scripts", "start"], "node --experimental-specifier-resolution=node --loader=ts-node/esm server.ts", path.join(baseDirectory, "package.json"));
 
 	if (argv["yes"] === true || await confirm("Ava?")) {
 		devDependencies.push("ava");
