@@ -291,6 +291,13 @@ if (argv["recursive"] === true && argv["update"] === true) {
 	fs.copyFileSync(path.join(prevDirectory, "pages", "_app.tsx"), path.join(baseDirectory, "pages", "_app.tsx"));
 	fs.copyFileSync(path.join(prevDirectory, "pages", "_document.tsx"), path.join(baseDirectory, "pages", "_document.tsx"));
 
+	fs.mkdirSync(path.join(baseDirectory, "routes"), { "recursive": true });
+
+	fs.mkdirSync(path.join(baseDirectory, "styles"), { "recursive": true });
+
+	fs.copyFileSync(path.join(prevDirectory, "styles", "globals.css"), path.join(baseDirectory, "styles", "globals.css"));
+	fs.copyFileSync(path.join(prevDirectory, "styles", "Home.module.css"), path.join(baseDirectory, "styles", "Home.module.css"));
+
 	fs.copyFileSync(path.join(prevDirectory, "server.ts"), path.join(baseDirectory, "server.ts"));
 
 	fs.copyFileSync(path.join(prevDirectory, "tsconfig.json"), path.join(baseDirectory, "tsconfig.json"));
