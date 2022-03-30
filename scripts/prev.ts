@@ -12,10 +12,6 @@ const argv = (function parseArgs(args, defaults: object = {}) {
 
 	args = args.join(" ").match(/(?<=^| )-(.*?)(?= +-|$)/gu) || [];
 
-	if (args[0] === "--") {
-		args.shift();
-	}
-
 	for (let x = 0; x < args.length; x++) {
 		const arg = args[x];
 
